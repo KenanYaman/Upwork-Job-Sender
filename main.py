@@ -1,4 +1,3 @@
-# coding=utf-8
 from apscheduler.schedulers.background import BlockingScheduler
 from upwork import *
 import config
@@ -14,11 +13,11 @@ while True:
         1- Run Application
         2- Add Rss
         """)
-    take = int(input("Select! : "))
+    take = int(input("Seçim yapın! : "))
 
     if take == 1:
+        vt().Create_table()
         if vt().check_rss() == True:
-            vt().Create_table()
             vt().write_log('İnfo', 'App runing')
             print("App Runing...")
             scheduler.start()
