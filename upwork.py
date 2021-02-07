@@ -20,7 +20,6 @@ class Upwork():
                 contentD = data.summary
                 content = re.sub("<[^<]+?>", " ", contentD)
                 link = data.link
-                # print(title,published,content,link)
                 if self.v.filter(link):
                     pass
                 else:
@@ -29,16 +28,16 @@ class Upwork():
         if count > 0:
             self.v.write_log('Add Job', str(count) + ' Job added' )
 
-        time.sleep(120)
+        time.sleep(5)
 
         a = len(vt().fetch_data())
-        self.v.write_log('Send Job', str(a) + ' Job sended')
+        if count > 0:
+            self.v.write_log('Send Job', str(a) + ' Job sended')
         while a > 0:
             b = vt().fetch_data()[a - 1][0]
-            send().send_message(vt().fetch_data()[a - 1][1])  # title
-            # s.send_message(v.fetch_data()[a -1][2])#content
-            send().send_message(vt().fetch_data()[a - 1][4])  # link
+            send().send_message(vt().fetch_data()[a - 1][0],vt().fetch_data()[a - 1][1],vt().fetch_data()[a -1][2],vt().fetch_data()[a - 1][4])  # id, title, content, link
+            # send().send_message(vt().fetch_data()[a - 1][1])  # title
+            # send().send_message(v.fetch_data()[a -1][2])#content
+            # send().send_message(vt().fetch_data()[a - 1][4])  # link
             a -= 1
             vt().change(b)
-
-
