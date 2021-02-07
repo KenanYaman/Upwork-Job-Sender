@@ -14,7 +14,7 @@ while True:
         1- Run Application
         2- Add Rss
         """)
-    take = int(input("Seçim yapın! : "))
+    take = int(input("Select! : "))
 
     if take == 1:
         if vt().check_rss() == True:
