@@ -19,6 +19,7 @@ class vt():
         self.con.commit()
 
 
+
     def into_data(self,title,content,published,link):
         value = """INSERT INTO job(id,title, content, published,link,add_date,send) VALUES(NULL,?,?,?,?,datetime('now','localtime'),'0') """
         self.cur.execute(value,[title,content,published,link])
@@ -32,6 +33,11 @@ class vt():
 
     def vt_title(self,data):
         self.cur.execute("""SELECT title FROM {}""".format(data))
+        data = self.cur.fetchall()
+        return data
+
+    def search_id(self,id):
+        self.cur.execute("""SELECT * FROM job WHERE id='{}'""".format(id))
         data = self.cur.fetchall()
         return data
 
@@ -67,7 +73,7 @@ class vt():
         else:
             return False
 
-
-
-
-
+    def deljob(self):
+        value = """DELETE FROM job"""
+        self.cur.execute(value)
+        self.con.commit()
