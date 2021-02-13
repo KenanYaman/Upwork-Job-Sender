@@ -1,8 +1,7 @@
-from telegram import *
+from sender import *
 import feedparser
 import re
-import time
-
+from apscheduler.schedulers.background import BlockingScheduler
 
 
 class Upwork():
@@ -28,16 +27,7 @@ class Upwork():
         if count > 0:
             self.v.write_log('Add Job', str(count) + ' Job added' )
 
-        time.sleep(5)
 
-        a = len(vt().fetch_data())
-        if count > 0:
-            self.v.write_log('Send Job', str(a) + ' Job sended')
-        while a > 0:
-            b = vt().fetch_data()[a - 1][0]
-            send().send_message(vt().fetch_data()[a - 1][0],vt().fetch_data()[a - 1][1],vt().fetch_data()[a -1][2],vt().fetch_data()[a - 1][4])  # id, title, content, link
-            # send().send_message(vt().fetch_data()[a - 1][1])  # title
-            # send().send_message(v.fetch_data()[a -1][2])#content
-            # send().send_message(vt().fetch_data()[a - 1][4])  # link
-            a -= 1
-            vt().change(b)
+scheduler = BlockingScheduler()
+scheduler.add_job(Upwork().take_job, 'interval', hours=config.time_hour, minutes=config.time_minute)
+scheduler.start()
