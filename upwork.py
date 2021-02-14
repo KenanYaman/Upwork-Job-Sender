@@ -1,4 +1,4 @@
-from sender import *
+from vt import *
 import feedparser
 import re
 from apscheduler.schedulers.background import BlockingScheduler
