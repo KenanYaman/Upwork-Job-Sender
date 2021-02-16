@@ -41,9 +41,12 @@ def get_job(update, context):
         vt().change(b)
 
 def get_log(update,context):
-    a = len(vt().read_log())
+    row = context.args[0]
+    a = len(vt().read_log(row))
+    update.message.reply_text(" -- last " + row + " record will show. Just wait a moment ")
+    time.sleep(3)
     while a > 0:
-        update.message.reply_text("id: " + str(vt().read_log()[a - 1][0]) +" --> " + vt().read_log()[a - 1][2]+ " - " + vt().read_log()[a - 1][3])
+        update.message.reply_text("id: " + str(vt().read_log(row)[a - 1][0]) +" --> " + vt().read_log(row)[a - 1][2]+ " - " + vt().read_log(row)[a - 1][3])
         a -= 1
         time.sleep(0.5)
 
