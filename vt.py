@@ -77,3 +77,9 @@ class vt():
         value = """DELETE FROM job"""
         self.cur.execute(value)
         self.con.commit()
+
+    def read_log(self):
+        self.cur.execute("""SELECT * FROM log ORDER BY id DESC LIMIT 10""")
+        data = self.cur.fetchall()
+        return data
+
