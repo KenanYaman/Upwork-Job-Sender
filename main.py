@@ -99,7 +99,7 @@ def button(update: Update, context: CallbackContext) -> None:
         query.edit_message_text('Cancel')
 
 def help(update, context):
-    update.message.reply_text('Welcome to Upwork job sender! \n 1- For take job "/getjob" \n 2- For take detail "/get {job_id} {title or content or link}. Need two argument!" \n 3- For delete job /deljob "its delete full job on database \n 4- For add rss /addrss {rss link here} \n 5- For read log /getlog')
+    update.message.reply_text('Welcome to Upwork job sender! \n 1- For take job "/getjob" \n 2- For take detail "/get {job_id} {title or content or link}. Need two argument!" \n 3- For delete job /deljob "its delete full job on database \n 4- For add rss /addrss {rss link here} \n 5- For read log /getlog {how much record}')
 
 
 
