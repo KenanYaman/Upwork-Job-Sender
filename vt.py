@@ -78,8 +78,9 @@ class vt():
         self.cur.execute(value)
         self.con.commit()
 
-    def read_log(self):
-        self.cur.execute("""SELECT * FROM log ORDER BY id DESC LIMIT 10""")
+    def read_log(self,limit):
+        self.cur.execute("""SELECT * FROM log ORDER BY id DESC LIMIT '{}'""".format(limit))
         data = self.cur.fetchall()
         return data
+
 
