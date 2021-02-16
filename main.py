@@ -36,6 +36,7 @@ def get_job(update, context):
     while a > 0:
         b = vt().fetch_data()[a - 1][0]
         update.message.reply_text(str(vt().fetch_data()[a - 1][0]) +" " + vt().fetch_data()[a - 1][1])  # id
+        time.sleep(0.5)
         a -= 1
         vt().change(b)
 
@@ -52,10 +53,13 @@ def get_specific(update, context):
     field = context.args[1]
     if field == "title":
         update.message.reply_text(str(v.search_id(id)[0][0]) + " " + v.search_id(id)[0][1])
+        time.sleep(0.5)
     elif field == "content":
         update.message.reply_text(v.search_id(id)[0][2])
+        time.sleep(0.5)
     elif field == "link":
         update.message.reply_text(v.search_id(id)[0][4])
+        time.sleep(0.5)
     else:
         update.message.reply_text('Wrong wrote, please try again')
 
