@@ -39,6 +39,13 @@ def get_job(update, context):
         a -= 1
         vt().change(b)
 
+def get_log(update,context):
+    a = len(vt().read_log())
+    while a > 0:
+        update.message.reply_text("id: " + str(vt().read_log()[a - 1][0]) +" --> " + vt().read_log()[a - 1][2]+ " - " + vt().read_log()[a - 1][3])
+        a -= 1
+        time.sleep(0.5)
+
 
 def get_specific(update, context):
     id = context.args[0]
@@ -85,7 +92,7 @@ def button(update: Update, context: CallbackContext) -> None:
         query.edit_message_text('Cancel')
 
 def help(update, context):
-    update.message.reply_text('Welcome to Upwork job sender! \n 1- For take job "/getjob" \n 2- For take detail "/get {job_id} {title or content or link}. Need two argument!" \n 3- For delete job /deljob "its delete full job on database \n 4- For add rss /addrss {rss link here}')
+    update.message.reply_text('Welcome to Upwork job sender! \n 1- For take job "/getjob" \n 2- For take detail "/get {job_id} {title or content or link}. Need two argument!" \n 3- For delete job /deljob "its delete full job on database \n 4- For add rss /addrss {rss link here} \n 5- For read log /getlog')
 
 
 
@@ -102,6 +109,7 @@ def main():
     dp.add_handler(CommandHandler("get", get_specific))
     dp.add_handler(CommandHandler("addrss", add_rss))
     dp.add_handler(CommandHandler("deljob", deljob))
+    dp.add_handler(CommandHandler("getlog", get_log))
     updater.dispatcher.add_handler(CallbackQueryHandler(button))
     dp.add_handler(CommandHandler("help", help))
     dp.add_error_handler(error)
