@@ -5,20 +5,33 @@ class vt():
         self.con = sql.connect('upwork.sqlite', check_same_thread=False)
         self.cur = self.con.cursor()
 
+
     def Create_table(self):
         vt_table = """CREATE TABLE IF NOT EXISTS job (id INTEGER PRIMARY KEY,title, content,published,link,add_date,send VARCHAR(1))"""
         vt_table2 = """CREATE TABLE IF NOT EXISTS rss (id INTEGER PRIMARY KEY,link,add_date)"""
-        vt_table3 = """CREATE TABLE IF NOT EXISTS log (id INTEGER PRIMARY KEY,title,content,log_date )"""
+        vt_table3 = """CREATE TABLE IF NOT EXISTS log (id INTEGER PRIMARY KEY,title,content,log_date)"""
+        vt_table4 = """CREATE TABLE IF NOT EXISTS note (id INTEGER PRIMARY KEY,title,content,add_date)"""
         self.cur.execute(vt_table)
         self.cur.execute(vt_table2)
         self.cur.execute(vt_table3)
+        self.cur.execute(vt_table4)
+
 
     def add_rss(self,link):
         value = ("""INSERT INTO rss(id,link,add_date) VALUES (NULL,?,datetime('now','localtime'))""")
         self.cur.execute(value,[link])
         self.con.commit()
 
+    def addnote(self,title,content):
+        value = ("""INSERT INTO note(id,title,content,add_date) VALUES (NULL,?,?,datetime('now','localtime'))""")
+        self.cur.execute(value, [title, content])
+        self.con.commit()
 
+
+    def shownote(self):
+        self.cur.execute("""SELECT id,content FROM note""")
+        data = self.cur.fetchall()
+        return data
 
     def into_data(self,title,content,published,link):
         value = """INSERT INTO job(id,title, content, published,link,add_date,send) VALUES(NULL,?,?,?,?,datetime('now','localtime'),'0') """
@@ -73,6 +86,11 @@ class vt():
         else:
             return False
 
+    def fetch_note(self):
+        self.cur.execute("""SELECT id FROM note """)
+        return self.cur.fetchall()
+
+
     def deljob(self):
         value = """DELETE FROM job"""
         self.cur.execute(value)
@@ -82,5 +100,3 @@ class vt():
         self.cur.execute("""SELECT * FROM log ORDER BY id DESC LIMIT '{}'""".format(limit))
         data = self.cur.fetchall()
         return data
-
-
