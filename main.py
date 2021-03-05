@@ -13,15 +13,25 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-def start(update, context):
-    v.Create_table()
+def check():
     if v.check_rss() == True:
         v.write_log('İnfo', 'App runing')
-        update.message.reply_text("App Runing...")
-
+        return True
     else:
-        update.message.reply_text('Not added rss, please first add rss')
         v.write_log('Error', 'App not start, because not have rss link')
+        return False
+
+def start(update, context):
+    if check():
+        update.message.reply_text('Welcome to Upwork job sender, with this application, you can send the sources you follow to the telegram to read them at any time.')
+        time.sleep(0.7)
+        update.message.reply_text('App runing')
+    else:
+        update.message.reply_text('Welcome to Upwork job sender, with this application, you can send the sources you follow to the telegram to read them at any time.')
+        time.sleep(0.7)
+        update.message.reply_text('It looks like no rss has been added yet. Type the following to add')
+        time.sleep(0.7)
+        update.message.reply_text('/addrss {rss link here}')
 
 
 def get_job(update, context):
@@ -33,12 +43,25 @@ def get_job(update, context):
     else:
         update.message.reply_text('No new jobs have been added since the last post')
 
+
     while a > 0:
         b = vt().fetch_data()[a - 1][0]
         update.message.reply_text(str(vt().fetch_data()[a - 1][0]) +" " + vt().fetch_data()[a - 1][1])  # id
         time.sleep(0.5)
         a -= 1
         vt().change(b)
+
+
+def button_get_job(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    query.answer()
+
+    if query.data == 'title':
+        update.message.reply_text('title')
+    elif query.data == 'content':
+        update.message.reply_text('content')
+    elif query.data == 'link':
+        update.message.reply_text('link')
 
 def get_log(update,context):
     row = context.args[0]
@@ -52,25 +75,59 @@ def get_log(update,context):
 
 
 def get_specific(update, context):
+    field = context.args
     id = context.args[0]
-    field = context.args[1]
-    if field == "title":
+    if len(field) == 1:
         update.message.reply_text(str(v.search_id(id)[0][0]) + " " + v.search_id(id)[0][1])
         time.sleep(0.5)
-    elif field == "content":
+        update.message.reply_text(v.search_id(id)[0][2])
+    elif len(field) == 2 or field == "title":
+        update.message.reply_text(str(v.search_id(id)[0][0]) + " " + v.search_id(id)[0][1])
+        time.sleep(0.5)
+    elif len(field) == 2 or field == "content":
         update.message.reply_text(v.search_id(id)[0][2])
         time.sleep(0.5)
-    elif field == "link":
+    elif len(field) == 2 or field == "link":
         update.message.reply_text(v.search_id(id)[0][4])
         time.sleep(0.5)
     else:
         update.message.reply_text('Wrong wrote, please try again')
 
+
+def direct_job(update: Update, context: CallbackContext) -> None:
+    id = update.message.text
+    if id.isdigit():
+        update.message.reply_text(v.search_id(id)[0][2])
+    else:
+        update.message.reply_text("Wrong! if you want help, you can write /help")
+
+
 def add_rss(update, context):
     rss = context.args[0]
     v.add_rss(rss)
+    v.write_log('İnfo', 'Rss Added')
     update.message.reply_text('Rss Added')
 
+def addnote(update,context):
+    lencon = len(context.args)
+    title = context.args[0:1]
+    note = context.args[1:lencon]
+    data = ""
+    for i in note:
+        data += i + " "
+    v.addnote(title[0], data)
+    v.write_log('İnfo', 'Note Added')
+    update.message.reply_text('Note Added')
+
+def shownote(update,context):
+    lendata = len(v.fetch_note())
+    update.message.reply_text('Your have : ' + str(lendata) + ' note')
+    time.sleep(0.5)
+    while lendata > 0:
+        update.message.reply_text("Title: " + str(v.shownote()[lendata - 1][0])) # id
+        time.sleep(0.5)
+        update.message.reply_text(v.shownote()[lendata - 1][1]) # content
+        lendata -= 1
 
 def deljob(update: Update, context: CallbackContext) -> None:
     keyboard = [
@@ -85,7 +142,7 @@ def deljob(update: Update, context: CallbackContext) -> None:
 
     update.message.reply_text('Are you sure ?, İf your answer yes, will delete all job ?:', reply_markup=reply_markup)
 
-def button(update: Update, context: CallbackContext) -> None:
+def button_del_job(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     query.answer()
 
@@ -99,12 +156,19 @@ def button(update: Update, context: CallbackContext) -> None:
         query.edit_message_text('Cancel')
 
 def help(update, context):
-    update.message.reply_text('Welcome to Upwork job sender! \n 1- For take job "/getjob" \n 2- For take detail "/get {job_id} {title or content or link}. Need two argument!" \n 3- For delete job /deljob "its delete full job on database \n 4- For add rss /addrss {rss link here} \n 5- For read log /getlog {how much record}')
-
-
+    update.message.reply_text('\n 1- For take job "/getjob"'
+                              '\n 2- For take detail "/get {job_id} {title or content or link}. Need two argument!"'
+                              '\n 3- For delete job /deljob "its delete full job on database'
+                              '\n 4- For add rss /addrss {rss link here}'
+                              '\n 5- For read log /getlog {how much record}'
+                              '\n 6- For add proposal note /addnote {text here}'
+                              '\n 7- For show proposal note /shownote'
+                              '\n 8- İf direct write job number, show job title and job content')
 
 def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
+    v.write_log("Error","Wrong get code")
+    update.message.reply_text("Wrong! if you want help, you can write /help")
 
 
 def main():
@@ -117,11 +181,15 @@ def main():
     dp.add_handler(CommandHandler("addrss", add_rss))
     dp.add_handler(CommandHandler("deljob", deljob))
     dp.add_handler(CommandHandler("getlog", get_log))
-    updater.dispatcher.add_handler(CallbackQueryHandler(button))
+    dp.add_handler(CommandHandler("shownote", shownote))
+    dp.add_handler(CommandHandler("addnote", addnote))
+    updater.dispatcher.add_handler(CallbackQueryHandler(button_del_job))
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, direct_job))
     dp.add_handler(CommandHandler("help", help))
     dp.add_error_handler(error)
     updater.start_polling()
     updater.idle()
+
 
 
 if __name__ == '__main__':
