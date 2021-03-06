@@ -81,13 +81,13 @@ def get_specific(update, context):
         update.message.reply_text(str(v.search_id(id)[0][0]) + " " + v.search_id(id)[0][1])
         time.sleep(0.5)
         update.message.reply_text(v.search_id(id)[0][2])
-    elif len(field) == 2 or field == "title":
+    elif len(field) == 2 and field[1] == "title":
         update.message.reply_text(str(v.search_id(id)[0][0]) + " " + v.search_id(id)[0][1])
         time.sleep(0.5)
-    elif len(field) == 2 or field == "content":
+    elif len(field) == 2 and field[1] == "content":
         update.message.reply_text(v.search_id(id)[0][2])
         time.sleep(0.5)
-    elif len(field) == 2 or field == "link":
+    elif len(field) == 2 and field[1] == "link":
         update.message.reply_text(v.search_id(id)[0][4])
         time.sleep(0.5)
     else:
