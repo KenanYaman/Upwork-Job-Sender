@@ -97,6 +97,8 @@ def get_specific(update, context):
 def direct_job(update: Update, context: CallbackContext) -> None:
     id = update.message.text
     if id.isdigit():
+        update.message.reply_text(v.search_id(id)[0][1])
+        time.sleep(0.5)
         update.message.reply_text(v.search_id(id)[0][2])
     else:
         update.message.reply_text("Wrong! if you want help, you can write /help")
