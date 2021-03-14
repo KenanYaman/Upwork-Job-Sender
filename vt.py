@@ -29,7 +29,7 @@ class vt():
 
 
     def shownote(self):
-        self.cur.execute("""SELECT id,content FROM note""")
+        self.cur.execute("""SELECT id,title,content FROM note""")
         data = self.cur.fetchall()
         return data
 
