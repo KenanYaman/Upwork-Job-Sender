@@ -126,9 +126,9 @@ def shownote(update,context):
     update.message.reply_text('Your have : ' + str(lendata) + ' note')
     time.sleep(0.5)
     while lendata > 0:
-        update.message.reply_text("Title: " + str(v.shownote()[lendata - 1][0])) # id
+        update.message.reply_text("Title: " + str(v.shownote()[lendata - 1][1])) # title
         time.sleep(0.5)
-        update.message.reply_text(v.shownote()[lendata - 1][1]) # content
+        update.message.reply_text(v.shownote()[lendata - 1][2]) # content
         lendata -= 1
 
 def deljob(update: Update, context: CallbackContext) -> None:
