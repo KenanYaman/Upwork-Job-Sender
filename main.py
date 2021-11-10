@@ -95,13 +95,24 @@ def get_specific(update, context):
 
 
 def direct_job(update: Update, context: CallbackContext) -> None:
+    Text = update.message.text.split(" ")
     id = update.message.text
-    if id.isdigit():
-        update.message.reply_text(v.search_id(id)[0][1])
-        time.sleep(0.5)
-        update.message.reply_text(v.search_id(id)[0][2])
+    if len(Text) == 2:
+        id = Text[0]
+        status = Text[1]
+        if status == "link":
+            update.message.reply_text(v.search_id(id)[0][4])
+        elif status == "content":
+            update.message.reply_text(v.search_id(id)[0][2])
+        elif status == "title":
+            update.message.reply_text(v.search_id(id)[0][1])
     else:
-        update.message.reply_text("Wrong! if you want help, you can write /help")
+        if id.isdigit():
+            update.message.reply_text(v.search_id(id)[0][1])
+            time.sleep(0.5)
+            update.message.reply_text(v.search_id(id)[0][2])
+        else:
+            update.message.reply_text("Wrong! if you want help, you can write /help")
 
 
 def add_rss(update, context):
@@ -216,4 +227,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
