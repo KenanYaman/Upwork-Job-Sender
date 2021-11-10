@@ -110,6 +110,24 @@ def add_rss(update, context):
     v.write_log('İnfo', 'Rss Added')
     update.message.reply_text('Rss Added')
 
+
+
+def del_rss(update,context):
+    if len(context.args) == 1:
+        update.message.reply_text("This rss deleted > " + str(v.search_rss(context.args[0])[0][1]))
+    else:
+        co = 0
+        lenn = len(v.show_all_rss())
+        while lenn > co:
+            id = v.show_all_rss()[co - 1][0]
+            rss = v.show_all_rss()[co - 1][1]
+            AddDate = v.show_all_rss()[co - 1][2]
+            update.message.reply_text("id -- > " + str(id) + " | " + "Rss link --> " + rss + " | " + "Added Date --> " + AddDate)
+            co += 1
+            time.sleep(0.3)
+        update.message.reply_text("If you want delete rss, please enter the id value " + " Etc.  /delrss {id}")
+        update.message.reply_text("INFO! -- > Write just one id value if you want delete")
+
 def addnote(update,context):
     lencon = len(context.args)
     title = context.args[0:1]
@@ -162,10 +180,11 @@ def help(update, context):
                               '\n 2- For take detail "/get {job_id} {title or content or link}. Need two argument!"'
                               '\n 3- For delete job /deljob "its delete full job on database'
                               '\n 4- For add rss /addrss {rss link here}'
-                              '\n 5- For read log /getlog {how much record}'
-                              '\n 6- For add proposal note /addnote {text here}'
-                              '\n 7- For show proposal note /shownote'
-                              '\n 8- İf direct write job number, show job title and job content')
+                              '\n 5- For dell rss /delrss'
+                              '\n 6- For read log /getlog {how much record}'
+                              '\n 7- For add proposal note /addnote {text here}'
+                              '\n 8- For show proposal note /shownote'
+                              '\n 9- İf direct write job number, show job title and job content')
 
 def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
@@ -185,6 +204,7 @@ def main():
     dp.add_handler(CommandHandler("getlog", get_log))
     dp.add_handler(CommandHandler("shownote", shownote))
     dp.add_handler(CommandHandler("addnote", addnote))
+    dp.add_handler(CommandHandler("delrss", del_rss))
     updater.dispatcher.add_handler(CallbackQueryHandler(button_del_job))
     dp.add_handler(MessageHandler(Filters.text & ~Filters.command, direct_job))
     dp.add_handler(CommandHandler("help", help))
