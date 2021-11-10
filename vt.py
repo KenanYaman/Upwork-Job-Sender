@@ -22,6 +22,21 @@ class vt():
         self.cur.execute(value,[link])
         self.con.commit()
 
+    def del_rss(self,id):
+        value = """DELETE FROM rss WHERE id='{}'""".format(id)
+        self.cur.execute(value)
+        self.con.commit()
+
+    def show_all_rss(self):
+        value = """SELECT * FROM rss """
+        self.cur.execute(value)
+        return self.cur.fetchall()
+
+    def search_rss(self,id):
+        self.cur.execute("""SELECT * FROM rss WHERE id='{}'""".format(id))
+        data = self.cur.fetchall()
+        return data
+
     def addnote(self,title,content):
         value = ("""INSERT INTO note(id,title,content,add_date) VALUES (NULL,?,?,datetime('now','localtime'))""")
         self.cur.execute(value, [title, content])
